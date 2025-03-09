@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <title>🎀 Akiのタイピングゲーム 🎀</title>
+  <meta charset="UTF-8">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Yomogi&display=swap" rel="stylesheet">
+
+  <style>
+    /* 🌸 全体デザイン */
+    body {
+      font-family: 'Yomogi', sans-serif;
+      background: linear-gradient(135deg, #99ccff, #ffccff);
+      text-align: center;
+      color: #444;
+    }
+
+    h1 {
+      font-family: 'Mochiy Pop One', sans-serif;
+      font-size: 2.5rem;
+      color: #ff69b4;
+      text-shadow: 2px 2px 5px rgba(255, 105, 180, 0.3);
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1);
+      border: 4px solid #ff69b4;
+    }
+
+    #keyword {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #0066ff;
+      padding: 10px;
+      border-radius: 10px;
+      background: white;
+      display: inline-block;
+      transition: color 0.2s ease-in-out;
+    }
+
+    #inputField {
+      font-size: 1.5rem;
+      padding: 10px;
+      border-radius: 10px;
+      border: 2px solid #ff69b4;
+      text-align: center;
+      transition: border-color 0.3s ease-in-out;
+    }
+
+    #inputField.correct {
+      border-color: #66ccff;
+    }
+
+    #timer {
+      font-size: 1.5rem;
+      color: #ff3333;
+    }
+
+    #score {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #ff69b4;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @keyframes typingEffect {
+      0% { color: #ff69b4; }
+      50% { color: #0066ff; }
+      100% { color: #ff69b4; }
+    }
+
+    #inputField.typing {
+      animation: typingEffect 0.5s infinite alternate;
+    }
+  </style>
+</head>
+<body>
+
+<main class="container">
+  <h1>🎀 Akiのタイピングゲーム 🎀</h1>
+  
+  <p><strong>制限時間：</strong><span id="timer">60</span> 秒</p>
+  
+  <p>💖 タイプする単語：</p>
+  <p id="keyword">---</p>
+
+  <input type="text" id="inputField" placeholder="ここに入力してね！" autocomplete="off">
+
+  <p>🌟 スコア： <span id="score">0</span> ポイント</p>
+
+  <button id="startButton">ゲームスタート！</button>
+
+  <p id="resultMessage" class="hidden"></p>
+</main>
+
+<script>
+  const words = [
+    "Ruby", "STORES", "tanoshii", "yatta-", "justforfun",
+    "sutomaru", "pos", "cashless", "netshop", "omise",
+    "manekineko", "okyakusann", "irasshaimase", "arigatou",
+    "selfreji", "kaiten", "heiten", "noren",
+    "mobairuo-da-", "chuushoukigyou"
+  ];
+
+  let score = 0;
+  let timeLeft = 60;
+  let timer;
+  let currentWord = "";
+
+  const keywordElement = document.getElementById("keyword");
+  const inputField = document.getElementById("inputField");
+  const timerElement = document.getElementById("timer");
+  const scoreElement = document.getElementById("score");
+  const startButton = document.getElementById("startButton");
+  const resultMessage = document.getElementById("resultMessage");
+
+  function startGame() {
+    score = 0;
+    timeLeft = 60;
+    scoreElement.textContent = score;
+    timerElement.textContent = timeLeft;
+    resultMessage.classList.add("hidden");
+    startButton.disabled = true;
+    inputField.value = "";
+    inputField.focus();
+    
+    newWord();
+    
+    timer = setInterval(() => {
+      timeLeft--;
+      timerElement.textContent = timeLeft;
+      
+      if (timeLeft <= 0) {
+        endGame();
+      }
+    }, 1000);
+  }
+
+  function newWord() {
+    currentWord = words[Math.floor(Math.random() * words.length)];
+    keywordElement.textContent = currentWord;
+  }
+
+  function checkInput() {
+    if (inputField.value === currentWord) {
+      score++;
+      scoreElement.textContent = score;
+      inputField.value = "";
+      inputField.classList.remove("typing");
+      newWord();
+    } else {
+      inputField.classList.add("typing");
+    }
+  }
+
+  function endGame() {
+    clearInterval(timer);
+    resultMessage.textContent = `🎉 ゲーム終了！あなたのスコアは ${score} ポイント！`;
+    resultMessage.classList.remove("hidden");
+    startButton.disabled = false;
+    inputField.value = "";
+    keywordElement.textContent = "---";
+  }
+
+  inputField.addEventListener("input", checkInput);
+  startButton.addEventListener("click", startGame);
+</script>
+
+</body>
+</html>
