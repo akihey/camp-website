@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <title>数当てゲーム！</title>
+  <title>数当てゲーム</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" >
   <style>
+    h1 {color: rgb(255, 115, 0);
+
+    }
     #guessGame {
       margin: 20px;
     }
@@ -11,6 +14,15 @@
     #guessGame input {
       width: 200px;
     }
+    #guessSubmit {
+        background-color: orange;
+    }
+    h1 {
+    font-family: "Comic Sans MS", "Arial Rounded MT Bold", cursive;
+}
+
+
+
   </style>
 </head>
 <body>
@@ -19,9 +31,9 @@
   <h1>数当てゲーム (1~20)</h1>
   
   <div id="guessGame">
-    <label for="guessField">予想: </label>
+    <label for="guessField">予想👇️ </label>
     <input type="number" min="1" max="20" id="guessField">
-    <input type="submit" value="予想を入力" id="guessSubmit">
+    <input type="submit" value="予想を入力してよん" id="guessSubmit">
     <p id="guessResult"></p>
   </div>
 </main>
@@ -46,7 +58,7 @@
     let userGuess = Number(guessField.value);
 
     if (userGuess === answerNumber) { // ユーザの入力が正解
-      guessResult.textContent = '正解です！';
+      guessResult.textContent = '正解です🌸';
     } else if (userGuess < answerNumber) { // ユーザの入力が正解より小さい
       guessResult.textContent = 'もっと大きいです';
     } else if (userGuess > answerNumber) { // ユーザの入力が正解より大きい
