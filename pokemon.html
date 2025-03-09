@@ -1,63 +1,132 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <title>今日のポケモン</title>
+  <title>今日のラッキーポケモン & 種族値</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
   <style>
-    #pokemon {
-      width: 300px;
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+      text-align: center;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .content {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      width: 90%;
+      max-width: 900px;
+    }
+
+    .card {
+      flex: 1;
+      max-width: 400px;
+      text-align: center;
+      padding: 20px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .card:hover {
+      transform: scale(1.05);
     }
 
     #pokemonImage {
       width: 100%;
+      max-height: 250px;
+      border-radius: 15px;
+      object-fit: cover;
+    }
+
+    canvas {
+      max-width: 300px;
+      margin: auto;
+    }
+
+    @media (max-width: 768px) {
+      .content {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
 <body>
 
 <main class="container">
-  <h1>今日のポケモン</h1>
-  
-  <div id="pokemon">
-    <h2 id="pokemonName"></h2>
-    <img id="pokemonImage" src="">
+  <h1>🌟 今日のラッキーポケモン & 種族値 🌟</h1>
+
+  <div class="content">
+    <!-- ポケモン情報 -->
+    <div class="card">
+      <h2>🎮 今日のラッキーポケモン</h2>
+      <h3 id="pokemonName">Loading...</h3>
+      <img id="pokemonImage" src="" alt="ポケモンの画像">
+    </div>
+
+    <!-- レーダーチャート -->
+    <div class="card">
+      <h2>📊 種族値</h2>
+      <canvas id="statsChart"></canvas>
+    </div>
   </div>
+
 </main>
 
 <script>
-  // ポケモンの名前を表示する要素を取得
   let pokemonName = document.getElementById('pokemonName');
-
-  // ポケモンの画像を表示する要素を取得
   let pokemonImage = document.getElementById('pokemonImage');
+  let ctx = document.getElementById('statsChart').getContext('2d');
 
-  // ポケモンは現在898種
-  let pokemonNumber = Math.floor(Math.random() * 898) + 1;
- 
-  // PokéAPIからデータを取得し、名前と画像を表示
+  let pokemonNumber = Math.floor(Math.random() * 151) + 1; // 初代ポケモン限定
+
   fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonNumber}`)
-    .then(function (response) {
-      // レスポンスをコンソールに出力
-      console.log(response);
-
-      // JSONデータを取得して次の .then() に渡す
-      return response.json();
-    })
-    .then(function(data) {
-      // JSONデータをコンソールに出力
-      console.log(data);
-
-      // ポケモンの名前を表示
+    .then(response => response.json())
+    .then(data => {
       pokemonName.textContent = data.name;
-
-      // ポケモンの画像を表示
       pokemonImage.src = data.sprites.front_default;
+
+      let stats = data.stats.map(stat => stat.base_stat);
+      let labels = ["HP", "攻撃", "防御", "特攻", "特防", "素早さ"];
+
+      new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: data.name,
+            data: stats,
+            fill: true,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            pointBackgroundColor: 'rgba(255, 99, 132, 1)'
+          }]
+        },
+        options: {
+          scales: {
+            r: {
+              suggestedMin: 0,
+              suggestedMax: 150
+            }
+          }
+        }
+      });
     })
-    .catch(function(error) {
-      // エラーが発生した場合はコンソールに出力
-      console.error(`エラーが発生しました:${error}`);
+    .catch(error => {
+      console.error(`ポケモン取得エラー: ${error}`);
+      pokemonName.textContent = "ポケモンを取得できませんでした";
     });
 </script>
 
 </body>
 </html>
+
