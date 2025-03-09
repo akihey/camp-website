@@ -1,29 +1,39 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <title>🎀 Akiのタイピングゲーム 🎀</title>
+  <title>🎀 タイピングゲーム 🎀</title>
   <meta charset="UTF-8">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Yomogi&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.1/lib/p5.min.js"></script>
 
   <style>
     /* 🌸 全体デザイン */
     body {
-      font-family: 'Yomogi', sans-serif;
+      font-family: 'M PLUS 1p', sans-serif;
       background: linear-gradient(135deg, #99ccff, #ffccff);
       text-align: center;
       color: #444;
     }
 
     h1 {
-      font-family: 'Mochiy Pop One', sans-serif;
+      font-family: 'M PLUS 1p', sans-serif;
       font-size: 2.5rem;
       color: #ff69b4;
       text-shadow: 2px 2px 5px rgba(255, 105, 180, 0.3);
     }
 
+    h2 {
+      font-family: 'M PLUS 1p', sans-serif;
+      font-size: 1rem;
+      color: #ff69b4;
+      text-shadow: 2px 2px 5px rgba(255, 105, 180, 0.3);
+    }
+
     .container {
+      position: relative;
+      z-index: 10;
       max-width: 600px;
       margin: auto;
       padding: 20px;
@@ -53,10 +63,6 @@
       transition: border-color 0.3s ease-in-out;
     }
 
-    #inputField.correct {
-      border-color: #66ccff;
-    }
-
     #timer {
       font-size: 1.5rem;
       color: #ff3333;
@@ -81,7 +87,33 @@
     #inputField.typing {
       animation: typingEffect 0.5s infinite alternate;
     }
+
+    /* 💙 可愛い青のボタン */
+    #startButton {
+      background: #66b3ff;
+      color: white;
+      font-size: 1.2rem;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 3px 3px 5px rgba(0, 0, 255, 0.2);
+    }
+
+    #startButton:hover {
+      background: #3399ff;
+      transform: scale(1.1);
+    }
+
+    #canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+
   </style>
+  
 </head>
 <body>
 
@@ -100,7 +132,10 @@
   <button id="startButton">ゲームスタート！</button>
 
   <p id="resultMessage" class="hidden"></p>
+  <h2>🚪アクセスカウンター: <span id="counter"></span></h2>
 </main>
+
+<div id="canvas"></div>
 
 <script>
   const words = [
@@ -164,7 +199,7 @@
 
   function endGame() {
     clearInterval(timer);
-    resultMessage.textContent = `🎉 ゲーム終了！あなたのスコアは ${score} ポイント！`;
+    resultMessage.textContent = "🎉 ゲーム終了！あなたのスコアは ${score} ポイント！";
     resultMessage.classList.remove("hidden");
     startButton.disabled = false;
     inputField.value = "";
@@ -173,11 +208,87 @@
 
   inputField.addEventListener("input", checkInput);
   startButton.addEventListener("click", startGame);
+  let particles = [];
+
+function setup() {
+  const canvas = createCanvas(windowWidth, windowHeight); // ウィンドウ全体をキャンバスに
+  canvas.parent('canvas')
+}
+
+function draw() {
+  // background(255,50); // 残像効果
+  clear();
+
+  // 粒子を更新・描画
+  for (let i = particles.length - 1; i >= 0; i--) {
+    let p = particles[i];
+    fill(...p.color, p.alpha);
+    noStroke();
+    ellipse(p.x, p.y, 6);
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vx *= 0.98; // 摩擦
+    p.vy = p.vy * 0.98 + 0.1; // 重力
+    p.alpha -= 5; // 透明度減少
+    if (p.alpha <= 0) particles.splice(i, 1);
+  }
+
+  // 定期的に花火を生成
+  if (frameCount % 60 === 0) {
+    let x = random(width), y = random(height / 2);
+    for (let i = 0; i < 100; i++) {
+      let angle = random(TWO_PI);
+      let velocity = random(2, 6);
+      particles.push({
+        x: x,
+        y: y,
+        vx: cos(angle) * velocity,
+        vy: sin(angle) * velocity,
+        alpha: 255,
+        color: [random(255), random(255), random(255)],
+      });
+    }
+  }
+}
 </script>
 
 <ul>
   <li><a href="index.html">TOPにもどる</a></li>
 </ul>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+  import { getFirestore, doc, runTransaction } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+  apiKey: "AIzaSyCyaOYG-1D_I7dLgZQUHuc2qgZKUiB9-ds",
+  authDomain: "counter-785dd.firebaseapp.com",
+  projectId: "counter-785dd",
+  storageBucket: "counter-785dd.firebasestorage.app",
+  messagingSenderId: "822972766179",
+  appId: "1:822972766179:web:2c5ce206e2b7711d8832d6"
+};
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const counterDoc = doc(db, 'counters', 'access');
+
+  // カウンターを増やして表示
+  const incrementCounter = async () => {
+    let newCount = 0;
+    await runTransaction(db, async (transaction) => {
+      const docSnap = await transaction.get(counterDoc);
+      newCount = (docSnap.exists() ? docSnap.data().count : 0) + 1;
+      transaction.set(counterDoc, { count: newCount });
+    });
+    document.getElementById('counter').textContent = newCount;
+  };
+
+  // ページロード時にカウンターを増やして表示
+  incrementCounter();
+</script>
 
 </body>
 </html>
