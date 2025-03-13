@@ -123,6 +123,14 @@
       left: 0;
     }
 
+    #resultMessage {
+  font-size: 1rem;
+  color: #ff69b4;
+  font-weight: bold;
+  margin-top: 30px; /* 🔥 下側にスペースを確保 */
+  padding-top: 10px;
+}
+
   </style>
   
 </head>
@@ -144,11 +152,11 @@
 
   <button id="startButton">ゲームスタート!</button>
 
-  <p id="resultMessage" class="hidden"></p>
-  <h2>🚪アクセスカウンター: <span id="counter"></span></h2>
+  <p id="resultMessage" class="hidden"></p> 
+  <p>🚪アクセスカウンター: <span id="counter"></span></p>
 
   <ul>
-    <li><a href="index.html">TOPにもどる</a></li>
+    <a href="index.html">TOPにもどる</a>
   </ul>
 </main>
 
@@ -234,11 +242,14 @@ const words = [
 
   function endGame() {
   clearInterval(timer);
-  resultMessage.textContent = `🎉 ゲーム終了!あなたのスコアは ${score} ポイント!`; // 修正済み
+  resultMessage.textContent = `🎉 ゲーム終了!あなたのスコアは ${score} ポイント!`;
   resultMessage.classList.remove("hidden");
   startButton.disabled = false;
   inputField.value = "";
   keywordElement.textContent = "---";
+
+  // 🔥 スコアのメッセージをもっと下に表示
+  resultMessage.style.marginTop = "30px"; 
 }
 
   inputField.addEventListener("input", checkInput);
