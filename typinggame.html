@@ -138,6 +138,20 @@
   margin-top: -15px; /* 🔥 日本語訳を上に移動 */
   position: relative;
 }
+
+ul {
+  list-style: none; /* 🔥 リストの点（•）を消す */
+  padding: 0;
+  text-align: center; /* 🔥 リンクを中央に配置 */
+  margin-top: +15px;
+}
+
+#counter {
+  font-size: 0.8rem; 
+}
+.small-text {
+  font-size: 0.8rem; /* 🔥 アクセスカウンター部分だけ小さく */
+}
   </style>
   
 </head>
@@ -160,11 +174,11 @@
   <button id="startButton">ゲームスタート!</button>
 
   <p id="resultMessage" class="hidden"></p> 
-  <p>🚪アクセスカウンター: <span id="counter"></span></p>
-
   <ul>
     <a href="index.html">TOPにもどる</a>
   </ul>
+  <p><span class="small-text">🚪アクセスカウンター:</span> <span id="counter"></span></p>
+
 </main>
 
 <div id="canvas"></div>
