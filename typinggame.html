@@ -12,9 +12,10 @@
     /* 🌸 全体デザイン */
     body {
       font-family: 'M PLUS 1p', sans-serif;
-      background: linear-gradient(135deg, #99ccff, #ffccff);
+      color: #ff69b4;
+      /* background: linear-gradient(135deg, #99ccff, #ffccff); */
       text-align: center;
-      color: #222;
+      background: rgb(137, 196, 245);
     }
 
     h1 {
@@ -31,6 +32,12 @@
       text-shadow: 2px 2px 5px rgba(255, 105, 180, 0.3);
     }
 
+    p {
+      font-family: 'M PLUS 1p', sans-serif;
+      font-size: 1rem;
+      color: #222;
+      text-shadow: 2px 2px 5px rgba(255, 105, 180, 0.3);
+    }
     .container {
       position: relative;
       z-index: 10;
@@ -97,7 +104,7 @@
       background: #66b3ff;
       color: white;
       font-size: 1.2rem;
-      padding: 12px 20px;
+      padding: 20px 20px;
       border: none;
       border-radius: 20px;
       cursor: pointer;
@@ -127,7 +134,9 @@
   <p><strong>制限時間:</strong><span id="timer">60</span> 秒</p>
   
   <p>💖 タイプする単語:</p>
-  <p id="keyword">---</p>
+<p id="keyword">---</p>
+<p id="translation" style="font-size: 1.2rem; color: #666;">(日本語訳)</p> <!-- 🔥 日本語訳を表示 -->
+
 
   <input type="text" id="inputField" placeholder="ここに入力してね!" autocomplete="off">
 
@@ -146,13 +155,29 @@
 <div id="canvas"></div>
 
 <script>
-  const words = [
-    "Ruby", "STORES", "tanoshii", "yatta-", "justforfun",
-    "sutomaru", "pos", "cashless", "netshop", "omise",
-    "manekineko", "okyakusann", "irasshaimase", "arigatou",
-    "selfreji", "kaiten", "heiten", "noren",
-    "mobairuo-da-", "chuushoukigyou"
-  ];
+const words = [
+  { en: "Ruby", jp: "ルビー" },
+  { en: "STORES", jp: "ストアーズ" },
+  { en: "tanoshii", jp: "楽しい" },
+  { en: "yatta-", jp: "やったー" },
+  { en: "justforfun", jp: "ジャストフォーファン" },
+  { en: "sutomaru", jp: "ストまる" },
+  { en: "pos", jp: "POSレジ" },
+  { en: "cashless", jp: "キャッシュレス" },
+  { en: "netshop", jp: "ネットショップ" },
+  { en: "omise", jp: "お店" },
+  { en: "manekineko", jp: "招き猫" },
+  { en: "okyakusann", jp: "お客さん" },
+  { en: "irasshaimase", jp: "いらっしゃいませ" },
+  { en: "arigatou", jp: "ありがとう" },
+  { en: "selfreji", jp: "セルフレジ" },
+  { en: "kaiten", jp: "開店" },
+  { en: "heiten", jp: "閉店" },
+  { en: "noren", jp: "暖簾（のれん）" },
+  { en: "mobairuo-da-", jp: "モバイルオーダー" },
+  { en: "chuushoukigyou", jp: "中小企業" }
+];
+
 
   let score = 0;
   let timeLeft = 60;
@@ -189,9 +214,11 @@
   }
 
   function newWord() {
-    currentWord = words[Math.floor(Math.random() * words.length)];
-    keywordElement.textContent = currentWord;
-  }
+  const wordObj = words[Math.floor(Math.random() * words.length)];
+  currentWord = wordObj.en;
+  keywordElement.textContent = currentWord;
+  document.getElementById("translation").textContent = `(${wordObj.jp})`; // 🔥 日本語訳を表示
+}
 
   function checkInput() {
     if (inputField.value === currentWord) {
