@@ -120,16 +120,16 @@
 <main class="container">
   <h1>🎀 タイピングゲーム 🎀</h1>
   
-  <p><strong>制限時間：</strong><span id="timer">60</span> 秒</p>
+  <p><strong>制限時間:</strong><span id="timer">60</span> 秒</p>
   
-  <p>💖 タイプする単語：</p>
+  <p>💖 タイプする単語:</p>
   <p id="keyword">---</p>
 
-  <input type="text" id="inputField" placeholder="ここに入力してね！" autocomplete="off">
+  <input type="text" id="inputField" placeholder="ここに入力してね!" autocomplete="off">
 
-  <p>🌟 スコア： <span id="score">0</span> ポイント</p>
+  <p>🌟 スコア: <span id="score">0</span> ポイント</p>
 
-  <button id="startButton">ゲームスタート！</button>
+  <button id="startButton">ゲームスタート!</button>
 
   <p id="resultMessage" class="hidden"></p>
   <h2>🚪アクセスカウンター: <span id="counter"></span></h2>
@@ -202,13 +202,13 @@
   }
 
   function endGame() {
-    clearInterval(timer);
-    resultMessage.textContent = "🎉 ゲーム終了!あなたのスコアは ${score} ポイント!";
-    resultMessage.classList.remove("hidden");
-    startButton.disabled = false;
-    inputField.value = "";
-    keywordElement.textContent = "---";
-  }
+  clearInterval(timer);
+  resultMessage.textContent = `🎉 ゲーム終了!あなたのスコアは ${score} ポイント!`; // 修正済み
+  resultMessage.classList.remove("hidden");
+  startButton.disabled = false;
+  inputField.value = "";
+  keywordElement.textContent = "---";
+}
 
   inputField.addEventListener("input", checkInput);
   startButton.addEventListener("click", startGame);
